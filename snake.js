@@ -97,7 +97,7 @@ class Snake{
         this.body.push(block3);
     }
     move(direction){
-        // console.log("Snake:moved");
+        console.log("Snake:moved");
         // this.head.move(direction);
         // for(var block of this.body) {
         //     block.move(direction);
