@@ -83,17 +83,17 @@ class SnakeBlock{
 
 class Snake{ 
     constructor(){
-        this.head = new SnakeHead("h1", 40, 160, 40, 40, "red");
+        this.head = new SnakeHead("h1", 40, 160, 20, 20, "red");
         this.body = [];
 
 
-        var block1  = new SnakeBlock("b1", 40, 120, 40,40,"blue",this.head);
+        var block1  = new SnakeBlock("b1", 40, 120, 20,20,"blue",this.head);
         this.body.push(block1);
 
-        var block2 = new SnakeBlock("b1", 40, 80, 40,40,"blue",block1);
+        var block2 = new SnakeBlock("b1", 40, 80, 20,20,"blue",block1);
         this.body.push(block2);
 
-        var block3 = new SnakeBlock("b1", 40, 40, 40,40,"blue",block2);
+        var block3 = new SnakeBlock("b1", 40, 40, 20,20,"blue",block2);
         this.body.push(block3);
     }
     move(direction){
@@ -116,24 +116,39 @@ class Snake{
 
 }
 
-class Snakegame{
+class SnakeGame{
     constructor(top,left,cell_count,cell_size){
         this.top = top;
         this.left = left;
         this.cell_count = cell_count;
         this.cell_size = cell_size;
+
+        this.createBoard();
+        this.snake = new Snake(t);
+    }
+
+    boardWidth(){
+        return this.cell_size * this.cell_count;
+    }
+    
+    boardHeight(){
+        return this.cell_size * this.cell_count;
+    }
+
+    
+    createBoard(){
         this.boardDiv = $("<div>",{
             id:"gameboard"})
             .css("top",this.top)
             .css("left",this.left)
-            .css("width", this.cell_size * this.cell_count)
-            .css("height", this.cell_size * this.cell_count)
-            // .css("background-color", "green")
-            .css("position", "fixed")
+            .css("width", this.boardWidth())
+            .css("height", this.boardHeight())
             .css("border","solid");
 
         $(document.body).append(this.boardDiv);
+
     }
+
     createFood(){
         for( var i = 0; i <10;i++){
             var left = Math.floor(Math.random()*this.cell_count)*this.cell_size + this.left;
@@ -158,7 +173,8 @@ class Snakegame{
 
 }
 
-var snake = new Snake();
+var game = new SnakeGame(20,20,20,20);
+
 
 
 document.addEventListener('keydown', function(event){
