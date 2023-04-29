@@ -1,5 +1,6 @@
 class SnakeHead{
-    constructor(cname,top,left, height, width, color){
+    constructor(snake,cname,top,left, height, width, color){
+        this.snake = snake;
         this.cname = cname;
         this.top = top;
         this.left = left;
@@ -17,16 +18,17 @@ class SnakeHead{
 
     }
     move(direction){
-        console.log("SnakeHead:moved");
+        var cell_size = this.snake.game.cell_size;
+        
 
         if(direction == "ArrowRight"){
-            this.left = this.left + 40;
+            this.left = this.left + cell_size;
         } else if(direction == "ArrowLeft"){
-            this.left = this.left - 40;
+            this.left = this.left - cell_size;
         }else if(direction == "ArrowUp"){
-            this.top = this.top - 40;
+            this.top = this.top - cell_size;
         }else if (direction == "ArrowDown"){
-            this.top = this.top + 40
+            this.top = this.top + cell_size
         };
 
         this.headDiv.css("top", this.top).css("left", this.left);
@@ -38,6 +40,7 @@ class SnakeHead{
 
 class SnakeBlock{
     constructor(cname, top, left, height, width, color, prev_block){
+
         this.cname = cname;
         this.top = top;
         this.left = left;
@@ -62,38 +65,27 @@ class SnakeBlock{
         this.left = this.prev_block.left;
         this.snakeBlockDiv.css("top", this.top).css("left", this.left);
     }
-
-    move(direction){
-
-        if(direction == "ArrowRight"){
-            this.left = this.left + 10;
-        } else if(direction == "ArrowLeft"){
-            this.left = this.left - 10;
-        }else if(direction == "ArrowUp"){
-            this.top = this.top - 10;
-        }else if (direction == "ArrowDown"){
-            this.top = this.top + 10
-        };
-
-        this.snakeBlockDiv.css("top", this.top).css("left", this.left);
-
-    }
 }
 
 
 class Snake{ 
-    constructor(){
-        this.head = new SnakeHead("h1", 40, 160, 20, 20, "red");
+    constructor(game){
+        this.game = game;
+        var cell_size = this.game.cell_size;
+        var top = this.game.top;
+        var left = this.game.left;
+
+        this.head = new SnakeHead(this, "h1", top, left + cell_size *3, cell_size, cell_size, "red");
         this.body = [];
 
 
-        var block1  = new SnakeBlock("b1", 40, 120, 20,20,"blue",this.head);
+        var block1  = new SnakeBlock( "b1", top, left + cell_size *2, cell_size, cell_size,"blue",this.head);
         this.body.push(block1);
 
-        var block2 = new SnakeBlock("b1", 40, 80, 20,20,"blue",block1);
+        var block2 = new SnakeBlock( "b1", top, left + cell_size , cell_size, cell_size,"blue",block1); 
         this.body.push(block2);
 
-        var block3 = new SnakeBlock("b1", 40, 40, 20,20,"blue",block2);
+        var block3 = new SnakeBlock( "b1", top, left, cell_size, cell_size,"blue",block2);
         this.body.push(block3);
     }
     move(direction){
@@ -124,7 +116,7 @@ class SnakeGame{
         this.cell_size = cell_size;
 
         this.createBoard();
-        this.snake = new Snake(t);
+        this.snake = new Snake(this);
     }
 
     boardWidth(){
@@ -139,6 +131,7 @@ class SnakeGame{
     createBoard(){
         this.boardDiv = $("<div>",{
             id:"gameboard"})
+            .css("position","fixed")
             .css("top",this.top)
             .css("left",this.left)
             .css("width", this.boardWidth())
@@ -186,16 +179,16 @@ document.addEventListener('keydown', function(event){
 
     if(code == "ArrowRight" ) {
         $("#qq").text(1);
-        snake.move(code);
+        game.snake.move(code);
     } else if(code == "ArrowLeft") {
         $("#qq").text(2)
-        snake.move(code);
+        game.snake.move(code);
     }else if (code == "ArrowUp"){
         $("#qq").text(3)
-        snake.move(code);
+        game.snake.move(code);
     }else if (code == "ArrowDown"){
         $("#qq").text(4)
-        snake.move(code);
+        game.snake.move(code);
     }
 
 
