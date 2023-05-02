@@ -1,4 +1,4 @@
-class SnakeHead{
+    class SnakeHead{
     constructor(snake,cname,top,left, height, width, color){
         this.snake = snake;
         this.cname = cname;
@@ -10,9 +10,13 @@ class SnakeHead{
 
        this.headDiv =  $("<div>", {
             class: cname
-        }).css("top", this.top).css("left", this.left).css("height", this.height)
-        .css("width", this.width).css("position", "fixed")
-        .css("background-color",this.color);
+        }).css("top", this.top)
+        .css("left", this.left)
+        .css("height", this.height)
+        .css("width", this.width)
+        .css("position", "fixed")
+        .css("background-color",this.color)
+        .css("z-index", 1);
 
         $(document.body).append(this.headDiv);
 
@@ -88,20 +92,31 @@ class Snake{
         var block3 = new SnakeBlock( "b1", top, left, cell_size, cell_size,"blue",block2);
         this.body.push(block3);
     }
+
+
     move(direction){
         console.log("Snake:moved");
-        // this.head.move(direction);
-        // for(var block of this.body) {
-        //     block.move(direction);
-        // };
 
-        // this.body[2].move_to_prev();
-        // this.body[1].move_to_prev();
-        // this.body[0].move_to_prev();
+       
+
+        var prevBlockIndex = this.body.length - 1;
+        var prevBlock = this.body[prevBlockIndex];
+        var bTop = prevBlock.top;
+        var bLeft =  prevBlock.left;
+        var bColor = prevBlock.color;
+        var bWidth = prevBlock.width;
+        var bHeight = prevBlock.height;
+        
+       if( $("#addBlock").is(":checked") ){
+            var block = new SnakeBlock("b1", bTop, bLeft, bWidth, bHeight, bColor, prevBlock);
+            this.body.push(block);
+        }
 
         for(var i = this.body.length - 1; i >= 0; i--){
             this.body[i].move_to_prev();
         }
+        
+
 
         this.head.move(direction);
     }
@@ -166,8 +181,13 @@ class SnakeGame{
 
 }
 
-var game = new SnakeGame(20,20,20,20);
+//----------------------------------------
 
+var game = null;
+
+function createGame(){
+    game = new SnakeGame(40,20,20,20);    
+}
 
 
 document.addEventListener('keydown', function(event){
@@ -178,20 +198,29 @@ document.addEventListener('keydown', function(event){
 
 
     if(code == "ArrowRight" ) {
-        $("#qq").text(1);
         game.snake.move(code);
     } else if(code == "ArrowLeft") {
-        $("#qq").text(2)
         game.snake.move(code);
     }else if (code == "ArrowUp"){
-        $("#qq").text(3)
         game.snake.move(code);
     }else if (code == "ArrowDown"){
-        $("#qq").text(4)
         game.snake.move(code);
     }
 
 
 });
 
+function checkFoodPosition(i, foodDiv) {
 
+    if (  $(foodDiv).offset().top != game.snake.head.top ) {
+        return false;
+    }
+
+    if (  $(foodDiv).offset().left != game.snake.head.left ) {
+        return false;
+
+    }
+
+    return true;
+
+}
